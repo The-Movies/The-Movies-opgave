@@ -1,0 +1,27 @@
+classDiagram
+direction LR
+
+class Cinema {
+  +Id
+  +Navn
+  +By
+}
+
+class Auditorium {
+  +Id
+  +Navn
+  +Kapacitet
+}
+
+class MonthlyProgram {
+  +Id
+  +År
+  +Måned
+  +MånedsStart
+  +MånedsSlut
+}
+
+Cinema "1" -- "*" Auditorium : har
+Cinema "1" -- "0..*" MonthlyProgram : månedligt program
+
+note for MonthlyProgram "Unikt pr. (Biograf, År, Måned). Alle visninger skal ligge mellem MånedsStart og MånedsSlut.\n(Visninger tilføjes først i UC2.2)"

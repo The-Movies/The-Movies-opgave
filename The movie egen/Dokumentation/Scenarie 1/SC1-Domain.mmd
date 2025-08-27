@@ -1,0 +1,24 @@
+classDiagram
+direction LR
+
+class Film {
+  +Id
+  +Titel
+  +VarighedMin
+  +Instruktør
+  +Premieredato
+  +Status
+}
+
+class Genre {
+  +Id
+  +Navn
+}
+
+class Filmstatus
+note for Filmstatus "Enum: Licence, Standby, NoLicence"
+
+note for Genre "Enum (Flags/bitmask): Action, Comedy, Drama, Horror, Romance, SciFi, Thriller, Documentary, Animation, Adventure"
+
+Film "0..*" -- "0..*" Genre : har genrer
+Film --> Filmstatus : har

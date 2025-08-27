@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The movie egen", "The movie egen\The movie egen.csproj", "{253A923F-CE1D-459E-A675-70B0AD492E6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Case1Test", "Case1Test\Case1Test.csproj", "{1CF7F3BE-A3AE-4482-AB73-263A17BB0BB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{253A923F-CE1D-459E-A675-70B0AD492E6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253A923F-CE1D-459E-A675-70B0AD492E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253A923F-CE1D-459E-A675-70B0AD492E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253A923F-CE1D-459E-A675-70B0AD492E6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CF7F3BE-A3AE-4482-AB73-263A17BB0BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CF7F3BE-A3AE-4482-AB73-263A17BB0BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CF7F3BE-A3AE-4482-AB73-263A17BB0BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CF7F3BE-A3AE-4482-AB73-263A17BB0BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E5BDAEBA-6043-4C3D-893B-4FFE32D0D7BA}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,161 @@
+classDiagram
+    %% ========================================
+    %% DOMAIN ENTITIES
+    %% ========================================
+    
+    class Cinema {
+        +int Id
+        +string Name
+        +string City
+        +List~Auditorium~ Auditoriums
+        +ToString() string
+    }
+    
+    class Auditorium {
+        +int Id
+        +string Name
+        +int Seats
+        +int CinemaId
+        +ToString() string
+    }
+    
+    class Movie {
+        +int Id
+        +string Title
+        +int DurationMin
+        +Genre Genres
+        +FilmStatus Status
+        +Movie()
+        +Movie(title, durationMin, genres, status)
+        +ToString() string
+    }
+    
+    class Screening {
+        +int Id
+        +int CinemaId
+        +int AuditoriumId
+        +int MovieId
+        +DateTime StartUtc
+        +int AdsMinutes
+        +int CleaningMinutes
+        +int TotalMinutes
+        +DateTime EndUtc
+        +DateTime StartLocal
+        +DateTime EndLocal
+        +Cinema Cinema
+        +Auditorium Auditorium
+        +Movie Movie
+        +CalcEnd(startUtc, movieDuration, ads, cleaning) DateTime
+        +ToString() string
+    }
+    
+    %% ========================================
+    %% ENUMS
+    %% ========================================
+    
+    class Genre {
+        <<enumeration>>
+        None
+        Action
+        Comedy
+        Drama
+        Horror
+        Romance
+        SciFi
+        Thriller
+        Documentary
+        Crime
+        Animation
+        Adventure
+        Fantasy
+    }
+    
+    class FilmStatus {
+        <<enumeration>>
+        Active
+        Archived
+    }
+    
+    %% ========================================
+    %% SERVICE LAYER
+    %% ========================================
+    
+    class MovieRegistry {
+        -IMovieRepository _repo
+        +MovieRegistry(repo)
+        +RegisterMovie(title, durationMin, genres) Movie
+    }
+    
+    class SchedulingService {
+        -IMovieRepository _movies
+        -IScreeningRepository _screenings
+        +SchedulingService(movies, screenings)
+        +AddScreening(cinemaId, auditoriumId, movieId, startLocal, adsMinutes, cleaningMinutes) Screening
+    }
+    
+    class AuditoriumService {
+        -ICinemaRepository _cinemaRepository
+        -IScreeningRepository _screeningRepository
+        +AuditoriumService(cinemaRepository, screeningRepository)
+        +AddAuditorium(cinemaId, name, seats) Auditorium
+        +UpdateAuditorium(auditoriumId, name, seats) void
+        +DeleteAuditorium(auditoriumId) bool
+    }
+    
+    %% ========================================
+    %% REPOSITORY INTERFACES
+    %% ========================================
+    
+    class IMovieRepository {
+        <<interface>>
+        +GetAll() IReadOnlyList~Movie~
+        +GetById(id) Movie
+        +Add(movie) void
+        +Update(movie) void
+        +Delete(id) void
+        +ExistsActiveTitle(title) bool
+    }
+    
+    class ICinemaRepository {
+        <<interface>>
+        +GetAll() IEnumerable~Cinema~
+        +GetById(id) Cinema
+        +SaveAll(cinemas) void
+        +AddAuditorium(cinemaId, name, seats) Auditorium
+        +UpdateAuditorium(auditoriumId, name, seats) void
+        +DeleteAuditorium(auditoriumId) bool
+        +GetAuditoriumById(auditoriumId) Auditorium
+    }
+    
+    class IScreeningRepository {
+        <<interface>>
+        +GetForCinemaMonth(cinemaId, year, month) IEnumerable~Screening~
+        +Add(screening) void
+        +Delete(screeningId) void
+    }
+    
+    %% ========================================
+    %% RELATIONSHIPS
+    %% ========================================
+    
+    %% Domain Entity Relationships
+    Cinema ||--o{ Auditorium : contains
+    Cinema ||--o{ Screening : hosts
+    Auditorium ||--o{ Screening : shows
+    Movie ||--o{ Screening : screened
+    
+    %% Service Dependencies
+    MovieRegistry ..> IMovieRepository : uses
+    SchedulingService ..> IMovieRepository : uses
+    SchedulingService ..> IScreeningRepository : uses
+    AuditoriumService ..> ICinemaRepository : uses
+    AuditoriumService ..> IScreeningRepository : uses
+    
+    %% Enum Usage
+    Movie ..> Genre : uses
+    Movie ..> FilmStatus : uses
+    
+    %% Navigation Properties
+    Screening --> Cinema : references
+    Screening --> Auditorium : references
+    Screening --> Movie : references

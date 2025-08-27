@@ -1,0 +1,12 @@
+sequenceDiagram
+actor Jens as "Jens Peter"
+participant System
+
+Jens->>System: Vælg biograf
+Jens->>System: Åbn program for næste måned
+alt Program findes
+  System-->>Jens: Vis eksisterende program (månedskalender pr. sal)
+else Intet program
+  System-->>Jens: Opret tomt program for næste måned
+  System-->>Jens: Vis kalender klar til planlægning
+end

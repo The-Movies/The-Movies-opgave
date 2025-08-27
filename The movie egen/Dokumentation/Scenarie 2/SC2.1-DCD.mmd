@@ -1,0 +1,84 @@
+classDiagram
+direction LR
+
+%% ===== Domain =====
+class Movie {
+  +int Id
+  +string Title
+  +int DurationMin
+  +Genre Genres
+  +string Director
+  +date PremiereDate
+  +FilmStatus Status
+}
+class Cinema { +int Id +string Name +string City }
+class Hall { +int Id +string Name +int Capacity +int CinemaId }
+class Program {
+  +int Id
+  +int CinemaId
+  +int Year
+  +int Month
+  +date MonthStart
+  +date MonthEnd
+}
+class Screening { +int Id +int ProgramId +int HallId +int MovieId +datetime Start +datetime End }
+
+class Genre
+class FilmStatus
+
+%% ===== Services =====
+class ProgramService {
+  +Program OpenOrCreateProgram(cinemaId:int, year:int, month:int)
+  +Screening AddScreening(programId:int, hallId:int, movieId:int, start:datetime)
+  +void UpdateScreening(screeningId:int, newStart:datetime, newHallId:int)
+  +void RemoveScreening(screeningId:int)
+  +Stream ExportMonthToExcel(cinemaId:int, year:int, month:int)
+  -datetime CalcEnd(start:datetime, movieMin:int)
+  -void ValidateMonthWindow(p:Program, start:datetime, end:datetime)
+  -void ValidateNoOverlap(existing:List~Screening~, start:datetime, end:datetime)
+  -void ValidatePremiere(m:Movie, start:datetime)
+}
+
+%% ===== Repositories =====
+class IProgramRepository {
+  +Program GetOrCreate(cinemaId:int, year:int, month:int)
+  +Program Get(programId:int)
+  +List~Screening~ ListScreenings(programId:int, hallId:int)
+  +Screening AddScreening(programId:int, hallId:int, movieId:int, start:datetime, end:datetime)
+  +void UpdateScreening(screeningId:int, newStart:datetime, newHallId:int, newEnd:datetime)
+  +void RemoveScreening(screeningId:int)
+}
+class IMovieRepository { +Movie Get(movieId:int) +List~Movie~ GetAll() }
+class ICinemaRepository { +Cinema Get(cinemaId:int) +List~Cinema~ GetAll() }
+class IHallRepository { +Hall Get(hallId:int) +List~Hall~ ListByCinema(cinemaId:int) +int Add(cinemaId:int, name:string, capacity:int) +void Remove(hallId:int) }
+
+%% ===== UI (MVVM) =====
+class PlanMonthViewModel {
+  -ProgramService _svc
+  -int _selectedCinemaId
+  -int _year
+  -int _month
+  +List~Screening~ Screenings
+  +void LoadProgram(cinemaId:int, year:int, month:int)
+  +void AddScreening()
+  +void RemoveSelected()
+  +void Export()
+}
+
+class RelayCommand { +bool CanExecute(obj) +void Execute(obj) +event CanExecuteChanged }
+
+%% Relationer
+ProgramService --> IProgramRepository : uses
+ProgramService --> IMovieRepository : uses
+ProgramService --> IHallRepository : uses
+PlanMonthViewModel --> ProgramService : uses
+
+Program "1" o-- "*" Screening
+Cinema "1" *-- "*" Hall
+Program "*" --> "1" Cinema
+Screening --> Movie
+Screening --> Hall
+
+%% Enums (sikker visning)
+note for Genre "Enum (Flags)"
+note for FilmStatus "Active, Archived"

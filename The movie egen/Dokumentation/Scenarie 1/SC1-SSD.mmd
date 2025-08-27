@@ -1,0 +1,13 @@
+sequenceDiagram
+actor JensPeter as Jens Peter
+participant System
+
+JensPeter->>System: Åbn "Registrér film"
+JensPeter->>System: Indtast Titel, Varighed, vælg Genrer
+JensPeter->>System: Klik "Tilføj"
+
+alt Validering OK
+  System-->>JensPeter: Bekræftelse + ny film vises i listen
+else Validering fejler
+  System-->>JensPeter: Fejlbesked (angiv årsag)
+end

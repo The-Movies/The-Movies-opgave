@@ -1,0 +1,26 @@
+sequenceDiagram
+actor Jens as "Jens Peter"
+participant View as "RegisterMovieView"
+participant VM as "RegisterMovieViewModel"
+participant Service as "MovieRegistry"
+participant Repo as "IMovieRepository"
+
+Jens->>View: Enter title, duration, genres
+Jens->>View: Click "Add"
+View->>VM: RegisterMovieCommand.Execute()
+VM->>VM: CanRegisterMovie()
+
+alt valid input
+  VM->>Service: RegisterMovie(title, duration, genres)
+  Service->>Repo: ExistsByTitle(title)?
+  Repo-->>Service: false
+  Service->>Service: Create Movie (Status = Active)
+  Service->>Repo: Add(movie)
+  Repo-->>Service: movie saved
+  Service-->>VM: movie
+  VM->>VM: Movies.Add(movie)
+  VM->>VM: Clear form
+  VM-->>View: Notify UI (PropertyChanged)
+else invalid input
+  VM-->>View: Set ErrorMessage
+end

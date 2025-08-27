@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="The_movie_egen.UI.View.ProgramView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Border Style="{StaticResource SurfaceCard}" Padding="16">
+            <TextBlock Text="Månedligt program &ndash; (kommer i Scenarie 2)"
+                 Foreground="{StaticResource Brush.Text}"
+                 FontSize="16"/>
+        </Border>
+    </Grid>
+</UserControl>

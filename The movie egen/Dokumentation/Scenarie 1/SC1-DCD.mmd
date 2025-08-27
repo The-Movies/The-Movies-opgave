@@ -1,0 +1,80 @@
+classDiagram
+direction LR
+
+%% ===== Domain =====
+class Movie {
+  +int Id
+  +string Title
+  +int DurationMin
+  +Genre Genres
+  +FilmStatus Status
+}
+
+class Genre
+note for Genre "Enum (flags): Action, Comedy, Drama, Horror, Romance, SciFi, Thriller, Documentary, Animation, Adventure"
+
+class FilmStatus
+note for FilmStatus "Enum: Active, Archived"
+
+Movie --> Genre : uses
+Movie --> FilmStatus : uses
+
+%% ===== Service =====
+class MovieRegistry {
+  +Movie RegisterMovie(title:string, durationMin:int, genres:Genre)
+  -void ValidateTitle(title:string)
+  -void ValidateDuration(durationMin:int)
+}
+
+%% ===== Repository =====
+class IMovieRepository {
+  +IEnumerable~Movie~ GetAll()
+  +bool ExistsByTitle(title:string)
+  +Movie Add(movie:Movie)
+}
+
+class JsonMovieRepository {
+  -string filePath
+  +IEnumerable~Movie~ GetAll()
+  +bool ExistsByTitle(title:string)
+  +Movie Add(movie:Movie)
+  -void SaveAll(movies:IEnumerable~Movie~)
+  -IList~Movie~ LoadAll()
+}
+
+IMovieRepository <|.. JsonMovieRepository
+MovieRegistry --> IMovieRepository : uses
+
+%% ===== UI (MVVM) =====
+class RegisterMovieViewModel {
+  -MovieRegistry _registry
+  -IMovieRepository _repo
+  +ObservableCollection~Movie~ Movies
+  +ObservableCollection~GenreOption~ GenreOptions
+  +string Title
+  +string DurationText
+  +string ErrorMessage
+  +ICommand RegisterMovieCommand
+  -bool CanRegisterMovie()
+  -void RegisterMovie()
+}
+
+class GenreOption {
+  +Genre Value
+  +string Label
+  +bool IsSelected
+}
+note for GenreOption "Implements INotifyPropertyChanged"
+
+class RelayCommand {
+  +RelayCommand(Action execute, Func~bool~ canExecute)
+  +bool CanExecute(object)
+  +void Execute(object)
+  +event CanExecuteChanged
+}
+
+RegisterMovieViewModel --> MovieRegistry : uses
+RegisterMovieViewModel --> IMovieRepository : reads list
+RegisterMovieViewModel "1" o-- "*" GenreOption : owns
+RegisterMovieViewModel --> RelayCommand : composes
+RegisterMovieViewModel --> Movie : contains/uses

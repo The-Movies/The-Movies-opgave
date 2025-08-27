@@ -1,0 +1,328 @@
+﻿<UserControl x:Class="The_movie_egen.UI.View.PlanMonthView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ========= VENSTRE: FORM ========= -->
+        <Border Grid.Column="0" Style="{StaticResource SurfaceCard}" Margin="0,0,16,0">
+            <StackPanel>
+                <TextBlock Text="Planlæg måned" Foreground="{StaticResource Brush.Text}"
+                           FontSize="18" FontWeight="Bold" Margin="0,0,0,12"/>
+
+                <!-- Biograf -->
+                <TextBlock Text="Biograf" Foreground="{StaticResource Brush.Text}"/>
+                <ComboBox ItemsSource="{Binding Cinemas}"
+                          SelectedItem="{Binding SelectedCinema}"
+                          Style="{StaticResource DarkCombo}"
+                          Margin="0,4,0,12">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Sal -->
+                <TextBlock Text="Sal" Foreground="{StaticResource Brush.Text}"/>
+                <ComboBox ItemsSource="{Binding SelectedCinema.Auditoriums}"
+                          SelectedItem="{Binding SelectedAuditorium}"
+                          Style="{StaticResource DarkCombo}"
+                          Margin="0,4,0,12">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Måned + Årstal -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <StackPanel Width="160">
+                        <TextBlock Text="Måned" Foreground="{StaticResource Brush.Text}" Margin="0,0,0,4"/>
+                        <ComboBox Width="160"
+                                  ItemsSource="{Binding Months}"
+                                  SelectedValuePath="Value"
+                                  SelectedValue="{Binding SelectedMonthNumber}"
+                                  Style="{StaticResource DarkCombo}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Width="120" Margin="8,0,0,0">
+                        <TextBlock Text="Årstal" Foreground="{StaticResource Brush.Text}" Margin="0,0,0,4"/>
+                        <ComboBox Width="120"
+                                  ItemsSource="{Binding Years}"
+                                  SelectedItem="{Binding SelectedYear}"
+                                  Style="{StaticResource DarkCombo}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Dato + Start -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <StackPanel Width="170">
+                        <TextBlock Text="Dato" Foreground="{StaticResource Brush.Text}"/>
+                        <DatePicker SelectedDate="{Binding NewDate}"/>
+                    </StackPanel>
+                    <StackPanel Margin="12,0,0,0" Width="170">
+                        <TextBlock Text="Start (HH:MM)" Foreground="{StaticResource Brush.Text}"/>
+                        <TextBox Style="{StaticResource DarkTextBox}"
+                                 Text="{Binding NewStartText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Film -->
+                <TextBlock Text="Film" Foreground="{StaticResource Brush.Text}"/>
+                <ComboBox ItemsSource="{Binding Movies}"
+                          SelectedItem="{Binding SelectedMovie}"
+                          Style="{StaticResource DarkCombo}"
+                          Margin="0,4,0,16">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Tilføj / ryd -->
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Tilføj forestilling" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding AddScreeningCommand}" Margin="0,0,8,0"/>
+                    <Button Content="Ryd felter" Style="{StaticResource OutlineButton}"
+                            Command="{Binding ClearFormCommand}"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="Tomato" Margin="0,12,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ========= HØJRE: LISTE / TIMELINE ========= -->
+        <Border Grid.Column="1" Style="{StaticResource SurfaceCard}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Toolbar -->
+                <!-- Biografnavne import -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <ItemsControl ItemsSource="{Binding CinemaFilters}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ToggleButton Content="{Binding Name}"
+                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                              Style="{StaticResource GenreChip}" Margin="0,0,8,0"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Måned & årstal combobox -->
+                    <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <ComboBox Width="140" ItemsSource="{Binding Months}"
+                                  SelectedValuePath="Value" SelectedValue="{Binding SelectedMonthNumber}"
+                                  Style="{StaticResource DarkCombo}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ComboBox Width="120" Margin="8,0,0,0"
+                                  ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}"
+                                  Style="{StaticResource DarkCombo}"/>
+                    </StackPanel>
+
+                    
+                </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <StackPanel>
+
+                            <!-- Header: 24 timer = 960 px (40 px/time) -->
+                            <Border Background="{StaticResource Brush.Surface2}"
+                                    BorderBrush="{StaticResource Brush.Border}"
+                                    BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="960"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Tid" Foreground="{StaticResource Brush.TextMuted}"
+                                               FontWeight="SemiBold" VerticalAlignment="Center"/>
+
+                                    <Canvas Grid.Column="1" Width="960" Height="26">
+                                        <!-- labels hver 2. time -->
+                                        <TextBlock Canvas.Left="0"   Canvas.Top="4" Text="00:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="80"  Canvas.Top="4" Text="02:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="160" Canvas.Top="4" Text="04:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="240" Canvas.Top="4" Text="06:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="320" Canvas.Top="4" Text="08:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="400" Canvas.Top="4" Text="10:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="480" Canvas.Top="4" Text="12:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="560" Canvas.Top="4" Text="14:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="640" Canvas.Top="4" Text="16:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="720" Canvas.Top="4" Text="18:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="800" Canvas.Top="4" Text="20:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="880" Canvas.Top="4" Text="22:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+                                        <TextBlock Canvas.Left="940" Canvas.Top="4" Text="24:00" Foreground="{StaticResource Brush.TextMuted}" FontSize="11"/>
+
+                                        <!-- små ticks -->
+                                        <Rectangle Canvas.Left="0"   Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="80"  Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="160" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="240" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="320" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="400" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="480" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="560" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="640" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="720" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="800" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="880" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                        <Rectangle Canvas.Left="960" Canvas.Top="20" Width="1" Height="6" Fill="{StaticResource Brush.Border}"/>
+                                    </Canvas>
+                                </Grid>
+                            </Border>
+
+                            <!-- Dage -->
+                            <ItemsControl ItemsSource="{Binding TimelineDays}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,4" Background="{StaticResource Brush.Surface}"
+                                                BorderBrush="{StaticResource Brush.Border}" BorderThickness="1"
+                                                CornerRadius="8" Padding="16">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="{Binding DateText}" FontWeight="Bold"
+                                                           Foreground="{StaticResource Brush.Text}" Margin="0,0,0,12"/>
+
+                                                <!-- Auditoriums for denne dag -->
+                                                <ItemsControl Grid.Row="1" ItemsSource="{Binding AuditoriumGroups}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Margin="0,6,0,0"
+                                                                    Background="{StaticResource Brush.Surface2}"
+                                                                    BorderBrush="{StaticResource Brush.Border}"
+                                                                    BorderThickness="1"
+                                                                    CornerRadius="6"
+                                                                    Padding="8">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="120"/>
+                                                                        <!-- 24 timer = 960px @ 40px/time -->
+                                                                        <ColumnDefinition Width="960"/>
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <!-- Venstre: Sal-navn (samme højde som rækken) -->
+                                                                    <TextBlock Grid.Column="0"
+                                                                               Text="{Binding AuditoriumName}"
+                                                                               Foreground="{StaticResource Brush.Text}"
+                                                                               FontWeight="SemiBold"
+                                                                               Height="{Binding RowHeight}"
+                                                                               VerticalAlignment="Center"/>
+
+                                                                    <!-- Højre: Canvas (samme højde som rækken) -->
+                                                                    <Canvas Grid.Column="1"
+                                                                            Width="960"
+                                                                            Height="{Binding RowHeight}"
+                                                                            Background="Transparent">
+                                                                        <!-- Filmblokke -->
+                                                                        <ItemsControl ItemsSource="{Binding Screenings}">
+                                                                            <ItemsControl.ItemsPanel>
+                                                                                <ItemsPanelTemplate>
+                                                                                    <Canvas/>
+                                                                                </ItemsPanelTemplate>
+                                                                            </ItemsControl.ItemsPanel>
+
+                                                                            <!-- Positionér containeren på Canvas -->
+                                                                            <ItemsControl.ItemContainerStyle>
+                                                                                <Style TargetType="ContentPresenter">
+                                                                                    <Setter Property="Canvas.Left" Value="{Binding TimelinePosition}"/>
+                                                                                    <Setter Property="Canvas.Top"  Value="{Binding TimelineTop}"/>
+                                                                                </Style>
+                                                                            </ItemsControl.ItemContainerStyle>
+
+                                                                            <!-- Klikbare blokke -->
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Button Width="{Binding TimelineWidth}"
+                                                                                            Height="30"
+                                                                                            Background="{Binding MovieColor}"
+                                                                                            BorderBrush="{StaticResource Brush.Border}"
+                                                                                            BorderThickness="1"
+                                                                                            ToolTip="{Binding TooltipText}"
+                                                                                            Cursor="Hand"
+                                                                                            Focusable="False"
+                                                                                            Command="{Binding DataContext.EditScreeningCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                            CommandParameter="{Binding}">
+                                                                                        <Button.Template>
+                                                                                            <ControlTemplate TargetType="Button">
+                                                                                                <Border Background="{TemplateBinding Background}"
+                                                                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                                                                        CornerRadius="4">
+                                                                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                                                                      VerticalAlignment="Center"/>
+                                                                                                </Border>
+                                                                                            </ControlTemplate>
+                                                                                        </Button.Template>
+                                                                                        <TextBlock Text="{Binding MovieTitle}"
+                                                                                                   Foreground="White"
+                                                                                                   FontWeight="SemiBold"
+                                                                                                   FontSize="11"
+                                                                                                   TextTrimming="CharacterEllipsis"
+                                                                                                   Margin="4,0"/>
+                                                                                    </Button>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                    </Canvas>
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Delete" Command="{Binding RemoveSelectedCommand}"/>
+    </UserControl.InputBindings>
+</UserControl>

@@ -1,0 +1,35 @@
+sequenceDiagram
+actor Jens as "Jens Peter"
+participant View as "PlanMonthView"
+participant VM as "PlanMonthViewModel"
+participant Svc as "ProgramService"
+participant ProgRepo as "IProgramRepository"
+participant MovieRepo as "IMovieRepository"
+participant HallRepo as "IHallRepository"
+
+Jens->>View: Vælg sal, film, dato, starttid
+Jens->>View: Klik "Tilføj"
+View->>VM: AddScreeningCommand.Execute()
+
+VM->>Svc: AddScreening(programId, hallId, movieId, start)
+Svc->>ProgRepo: GetProgram(programId)
+ProgRepo-->>Svc: Program
+Svc->>MovieRepo: Get(movieId)
+MovieRepo-->>Svc: Movie
+Svc->>HallRepo: Get(hallId)
+HallRepo-->>Svc: Hall
+Svc->>Svc: Calc end = start + movie.DurationMin + 30
+Svc->>Svc: Validate month window
+Svc->>ProgRepo: ListScreenings(programId, hallId)
+ProgRepo-->>Svc: [existingScreenings]
+Svc->>Svc: Validate no overlap
+alt OK
+  Svc->>ProgRepo: AddScreening(programId, hallId, movieId, start, end)
+  ProgRepo-->>Svc: Screening
+  Svc-->>VM: Screening
+  VM->>VM: Add to ObservableCollection
+  VM-->>View: Refresh UI
+else Fejl
+  Svc-->>VM: throws Exception (premiere/overlap/udenfor måned)
+  VM-->>View: Vis fejlbesked
+end

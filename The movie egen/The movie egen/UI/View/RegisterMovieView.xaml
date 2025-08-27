@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="The_movie_egen.UI.View.RegisterMovieView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:The_movie_egen.UI.Converters">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Formular -->
+        <Border Style="{StaticResource SurfaceCard}" Grid.Column="0" Margin="0,0,16,0">
+            <StackPanel>
+                <TextBlock Text="Registrér ny film"
+                   Foreground="{StaticResource Brush.Text}"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Margin="0,0,0,12"/>
+
+                <TextBlock Text="Titel" Foreground="{StaticResource Brush.Text}"/>
+                <TextBox Style="{StaticResource DarkTextBox}"
+                 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="0,4,0,12"/>
+
+                <TextBlock Text="Varighed (min)" Foreground="{StaticResource Brush.Text}"/>
+                <TextBox Style="{StaticResource DarkTextBox}"
+                 Text="{Binding DurationText, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="0,4,0,12"/>
+
+                <TextBlock Text="Genrer" Foreground="{StaticResource Brush.Text}" />
+
+                <ItemsControl ItemsSource="{Binding GenreOptions}" Margin="0,4,0,20">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton Style="{StaticResource GenreChip}"
+                    IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                    Content="{Binding Label}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+
+                                 <StackPanel Orientation="Horizontal">
+                     <Button Content="Tilføj"
+                   Style="{StaticResource PrimaryButton}"
+                   Command="{Binding RegisterMovieCommand}"
+                   Margin="0,0,8,0"/>
+                                           <Button Content="Rediger"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding EditMovieCommand}"
+                    CommandParameter="{Binding SelectedMovie}"
+                    IsEnabled="{Binding SelectedMovie, Converter={x:Static converters:ObjectToBoolConverter.Instance}}"
+                    Margin="0,0,8,0"/>
+                     <Button Content="Slet"
+                   Style="{StaticResource PrimaryButton}"
+                   Command="{Binding DeleteMovieCommand}"
+                   CommandParameter="{Binding SelectedMovie}"
+                   IsEnabled="{Binding SelectedMovie, Converter={x:Static converters:ObjectToBoolConverter.Instance}}"
+                   Margin="0,0,8,0"/>
+                     <Button Content="Ryd"
+                   Style="{StaticResource OutlineButton}"
+                   Command="{Binding ClearFormCommand}"
+                   Visibility="Collapsed"/>
+                 </StackPanel>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="Tomato" Margin="0,12,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Liste -->
+        <Border Style="{StaticResource SurfaceCard}" Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                                 <!-- Søgebar -->
+                 <Border Grid.Row="0" 
+                         Background="{StaticResource Brush.Surface2}"
+                         BorderBrush="{StaticResource Brush.Border}"
+                         BorderThickness="1"
+                         CornerRadius="12"
+                         Padding="8"
+                         Margin="0,0,0,8"
+                         Height="50">
+                     <Grid>
+                         <Grid.ColumnDefinitions>
+                             <ColumnDefinition Width="*"/>
+                             <ColumnDefinition Width="Auto"/>
+                         </Grid.ColumnDefinitions>
+                         
+                         <TextBox Grid.Column="0"
+                                  Style="{StaticResource DarkTextBox}"
+                                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                  Margin="0,0,8,0"
+                                  VerticalAlignment="Center"
+                                  FontSize="13">
+                             <TextBox.InputBindings>
+                                 <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                             </TextBox.InputBindings>
+                         </TextBox>
+                         
+                         <Button Grid.Column="1"
+                                 Content="Søg"
+                                 Style="{StaticResource PrimaryButton}"
+                                 Command="{Binding SearchCommand}"
+                                 Height="34"
+                                 Padding="12,6"
+                                 FontSize="12"/>
+                     </Grid>
+                 </Border>
+
+                <!-- Film liste -->
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding FilteredMovies}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="None"
+                          SelectionMode="Single"
+                          SelectedItem="{Binding SelectedMovie}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Title}"       Header="Titel"  Width="*"
+                                  ElementStyle="{StaticResource CenterCell}"
+                                  HeaderStyle="{StaticResource CenterHeader}"/>
+                        <DataGridTextColumn Binding="{Binding DurationMin}" Header="Min"    Width="90"
+                                  ElementStyle="{StaticResource CenterCell}"
+                                  HeaderStyle="{StaticResource CenterHeader}"/>
+                        <DataGridTextColumn Binding="{Binding Genres}"      Header="Genrer" Width="180"
+                                  ElementStyle="{StaticResource CenterCell}"
+                                  HeaderStyle="{StaticResource CenterHeader}"/>
+                                                 <DataGridTextColumn Binding="{Binding Status}"      Header="Status" Width="110"
+                                   ElementStyle="{StaticResource CenterCell}"
+                                   HeaderStyle="{StaticResource CenterHeader}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

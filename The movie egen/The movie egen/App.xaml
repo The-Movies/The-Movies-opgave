@@ -1,0 +1,29 @@
+﻿<Application x:Class="The_movie_egen.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:The_movie_egen.UI.ViewModel"
+             xmlns:v="clr-namespace:The_movie_egen.UI.View"
+             ShutdownMode="OnMainWindowClose"
+             Startup="OnStartup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Dit tema -->
+                <ResourceDictionary Source="/UI/View/Themes/Movies.Dark.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Implicitte DataTemplates: hvilken View der skal vises for en ViewModel -->
+            <DataTemplate DataType="{x:Type vm:RegisterMovieViewModel}">
+                <v:RegisterMovieView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:CinemasViewModel}">
+                <v:CinemasView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:PlanMonthViewModel}">
+                <v:PlanMonthView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

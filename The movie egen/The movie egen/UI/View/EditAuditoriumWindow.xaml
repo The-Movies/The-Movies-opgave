@@ -1,0 +1,68 @@
+<Window x:Class="The_movie_egen.UI.View.EditAuditoriumWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:The_movie_egen.UI.Converters"
+        Title="Rediger sal"
+        Height="300" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:BoolToTitleConverter x:Key="BoolToTitleConverter"/>
+    </Window.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" 
+                   Text="{Binding IsEditMode, Converter={StaticResource BoolToTitleConverter}, ConverterParameter='Rediger sal|Opret ny sal'}"
+                   FontSize="18" FontWeight="Bold"
+                   Foreground="{StaticResource Brush.Text}"
+                   Margin="0,0,0,20"/>
+
+        <!-- Name -->
+        <TextBlock Grid.Row="1" Text="Salnavn:" 
+                   Foreground="{StaticResource Brush.Text}"
+                   Margin="0,0,0,5"/>
+        <TextBox Grid.Row="2" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="0,0,0,15"
+                 Background="{StaticResource Brush.Surface}"
+                 Foreground="{StaticResource Brush.Text}"
+                 BorderBrush="{StaticResource Brush.Border}"/>
+
+        <!-- Seats -->
+        <TextBlock Grid.Row="3" Text="Kapacitet (antal pladser):" 
+                   Foreground="{StaticResource Brush.Text}"
+                   Margin="0,0,0,5"/>
+        <TextBox Grid.Row="4" Text="{Binding Seats, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="0,0,0,20"
+                 Background="{StaticResource Brush.Surface}"
+                 Foreground="{StaticResource Brush.Text}"
+                 BorderBrush="{StaticResource Brush.Border}"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Annuller" 
+                    Command="{Binding CancelCommand}"
+                    Width="80" Height="30" Margin="0,0,10,0"
+                    Background="{StaticResource Brush.Surface2}"
+                    Foreground="{StaticResource Brush.Text}"
+                    BorderBrush="{StaticResource Brush.Border}"/>
+            <Button Content="{Binding IsEditMode, Converter={StaticResource BoolToTitleConverter}, ConverterParameter='Gem|Opret'}" 
+                    Command="{Binding SaveCommand}"
+                    Width="80" Height="30"
+                    Background="{StaticResource Brush.Primary}"
+                    Foreground="White"
+                    BorderBrush="{StaticResource Brush.Primary}"/>
+        </StackPanel>
+    </Grid>
+</Window>

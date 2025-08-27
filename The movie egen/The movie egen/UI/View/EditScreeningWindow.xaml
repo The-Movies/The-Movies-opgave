@@ -1,0 +1,183 @@
+<Window x:Class="The_movie_egen.UI.View.EditScreeningWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rediger forestilling"
+        Height="450" Width="700"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource Brush.Primary}"
+        ResizeMode="NoResize">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" 
+                   Text="Rediger forestilling"
+                   FontSize="18" 
+                   FontWeight="Bold"
+                   Foreground="{StaticResource Brush.Text}"
+                   Margin="0,0,0,20"/>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Film info - VENSTRE -->
+            <Border Grid.Column="0" 
+                    Background="{StaticResource Brush.Surface}"
+                    BorderBrush="{StaticResource Brush.Border}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel>
+                    <TextBlock Text="Film information"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource Brush.Text}"
+                               Margin="0,0,0,16"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Titel:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" 
+                                   Text="{Binding MovieTitle}" 
+                                   Foreground="{StaticResource Brush.Text}"
+                                   FontSize="14"
+                                   Margin="0,0,0,12"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Genre:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" 
+                                   Text="{Binding MovieGenre}" 
+                                   Foreground="{StaticResource Brush.Text}"
+                                   Margin="0,0,0,12"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Varighed:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" 
+                                   Text="{Binding MovieDuration}" 
+                                   Foreground="{StaticResource Brush.Text}"
+                                   Margin="0,0,0,12"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Sal:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" 
+                                   Text="{Binding AuditoriumName}" 
+                                   Foreground="{StaticResource Brush.Text}"
+                                   Margin="0,0,0,12"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Edit form - HØJRE -->
+            <Border Grid.Column="2" 
+                    Background="{StaticResource Brush.Surface}"
+                    BorderBrush="{StaticResource Brush.Border}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16">
+                <StackPanel>
+                    <TextBlock Text="Rediger tidsplan"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource Brush.Text}"
+                               Margin="0,0,0,16"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Dato:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <DatePicker Grid.Row="0" Grid.Column="1" 
+                                    SelectedDate="{Binding EditDate}" 
+                                    Margin="0,0,0,12"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Start tid:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" 
+                                 Text="{Binding EditStartTime}" 
+                                 Style="{StaticResource DarkTextBox}"
+                                 Margin="0,0,0,12"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Reklamer + rengøring:" 
+                                   Foreground="{StaticResource Brush.TextMuted}" 
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,16,12"/>
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding AdsMinutes}" 
+                                       Foreground="{StaticResource Brush.Text}"
+                                       VerticalAlignment="Center"
+                                       FontSize="14"
+                                       Margin="0,0,4,0"/>
+                            <TextBlock Text="+" 
+                                       Foreground="{StaticResource Brush.TextMuted}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,4,0"/>
+                            <TextBlock Text="{Binding CleaningMinutes}" 
+                                       Foreground="{StaticResource Brush.Text}"
+                                       VerticalAlignment="Center"
+                                       FontSize="14"
+                                       Margin="0,0,4,0"/>
+                            <TextBlock Text="min" 
+                                       Foreground="{StaticResource Brush.TextMuted}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Slet forestilling"
+                    Style="{StaticResource OutlineButton}"
+                    Command="{Binding DeleteScreeningCommand}"
+                    Margin="0,0,12,0"
+                    Width="140"
+                    Height="36"/>
+            
+            <Button Content="Gem ændringer"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveChangesCommand}"
+                    Width="140"
+                    Height="36"/>
+        </StackPanel>
+    </Grid>
+</Window>
