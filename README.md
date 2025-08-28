@@ -100,8 +100,9 @@ git clone https://github.com/The-Movies/The-Movies-opgave.git
 
 ---
 
-## 📷 Skærmbilleder *(kommer senere)*
-> Her indsætter vi screenshots af systemet, når GUI-delen er klar.
+## 📷 Skærmbilleder 
+<img width="1319" height="713" alt="image" src="https://github.com/user-attachments/assets/cfdb0c5f-ab4c-45b9-9c17-2886d2161782" />
+
 
 ---
 
