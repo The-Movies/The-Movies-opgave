@@ -95,8 +95,12 @@ namespace The_movie_egen.UI.ViewModel
                     System.Diagnostics.Debug.WriteLine($"  Cinema: {cinema.Name} with {cinema.Auditoriums.Count} auditoriums");
                 }
                 
-                Movies = new ObservableCollection<Movie>(_movieRepo.GetAll());
+                Movies = new ObservableCollection<Movie>();
+                LoadMovies(); // Load movies initially
                 System.Diagnostics.Debug.WriteLine($"PlanMonthViewModel: Loaded {Movies.Count} movies");
+                
+                // Subscribe to movie repository changes
+                _movieRepo.MoviesChanged += (_, __) => LoadMovies();
                 
                 Screenings = new ObservableCollection<ScreeningVM>();
 
@@ -350,6 +354,36 @@ namespace The_movie_egen.UI.ViewModel
                 // Lad ikke programmet crashe, bare vis tom liste
                 Screenings.Clear();
                 TimelineDays.Clear();
+            }
+        }
+
+        // Loader film fra repository og opdaterer Movies collection
+        public void LoadMovies()
+        {
+            try
+            {
+                var currentSelectedMovieId = SelectedMovie?.Id;
+                
+                Movies.Clear();
+                var allMovies = _movieRepo.GetAll();
+                foreach (var movie in allMovies)
+                {
+                    Movies.Add(movie);
+                }
+                
+                // Gendan valgt film hvis den stadig findes
+                if (currentSelectedMovieId.HasValue)
+                {
+                    SelectedMovie = Movies.FirstOrDefault(m => m.Id == currentSelectedMovieId.Value);
+                }
+                
+                System.Diagnostics.Debug.WriteLine($"LoadMovies: Loaded {Movies.Count} movies");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Fejl i LoadMovies: {ex.Message}");
+                // Lad ikke programmet crashe, bare vis tom liste
+                Movies.Clear();
             }
         }
 

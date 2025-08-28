@@ -1,4 +1,5 @@
 ﻿// System-navneområder (standard)
+using System;                             // EventHandler
 using System.Collections.Generic;         // IReadOnlyList<T>
 
 // Domænemodeller
@@ -61,5 +62,14 @@ namespace The_movie_egen.Model.Repositories
         /// <param name="title">Titel at søge efter</param>
         /// <returns>True hvis der findes en aktiv film med denne titel</returns>
         bool ExistsActiveTitle(string title);
+
+        // ─────────────────────────────────────────────────────────────────────────
+        //  Events for notifying about changes
+        // ─────────────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Event that is raised when movies are added, updated, or deleted.
+        /// </summary>
+        event EventHandler? MoviesChanged;
     }
 }

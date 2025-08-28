@@ -29,6 +29,11 @@ namespace Case1Test.TestDoubles
         private int _nextId = 1;
 
         /// <summary>
+        /// Event that is raised when movies are added, updated, or deleted.
+        /// </summary>
+        public event EventHandler? MoviesChanged;
+
+        /// <summary>
         /// Henter alle film sorteret efter titel.
         /// </summary>
         public IReadOnlyList<Movie> GetAll() => _items.OrderBy(x => x.Title).ToList();
@@ -48,6 +53,7 @@ namespace Case1Test.TestDoubles
             // Simuler database auto-increment - tildel næste ledige ID
             movie.Id = _nextId++;
             _items.Add(movie);
+            MoviesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -58,6 +64,7 @@ namespace Case1Test.TestDoubles
             var i = _items.FindIndex(x => x.Id == movie.Id);
             if (i < 0) throw new KeyNotFoundException($"Movie {movie.Id} not found");
             _items[i] = movie;
+            MoviesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -67,7 +74,11 @@ namespace Case1Test.TestDoubles
         public void Delete(int id)
         {
             var idx = _items.FindIndex(x => x.Id == id);
-            if (idx >= 0) _items.RemoveAt(idx);
+            if (idx >= 0) 
+            {
+                _items.RemoveAt(idx);
+                MoviesChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

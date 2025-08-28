@@ -36,6 +36,11 @@ namespace The_movie_egen.Data.Json
         private readonly string _indexFile;
 
         /// <summary>
+        /// Movie repository til at indlæse film-data.
+        /// </summary>
+        private readonly IMovieRepository? _movieRepo;
+
+        /// <summary>
         /// JSON-serialiseringsindstillinger for læsbar output.
         /// </summary>
         private static readonly JsonSerializerOptions _json = new()
@@ -75,11 +80,13 @@ namespace The_movie_egen.Data.Json
         /// Ctor: initialiserer repository og opretter nødvendige directories.
         /// </summary>
         /// <param name="baseDir">Base-directory for forestillings-filer (default: "data/screenings")</param>
-        public JsonScreeningRepository(string baseDir = "data/screenings")
+        /// <param name="movieRepo">Optional movie repository til at indlæse film-data</param>
+        public JsonScreeningRepository(string baseDir = "data/screenings", IMovieRepository? movieRepo = null)
         {
             _baseDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, baseDir));
             Directory.CreateDirectory(_baseDir);
             _indexFile = Path.Combine(_baseDir, "index.json");
+            _movieRepo = movieRepo;
             EnsureIndex();
         }
 
@@ -114,7 +121,9 @@ namespace The_movie_egen.Data.Json
                 MovieId = d.MovieId,
                 StartUtc = DateTime.SpecifyKind(d.StartUtc, DateTimeKind.Utc),
                 AdsMinutes = d.AdsMinutes,
-                CleaningMinutes = d.CleaningMinutes
+                CleaningMinutes = d.CleaningMinutes,
+                // Indlæs Movie data hvis movie repository er tilgængelig
+                Movie = _movieRepo?.GetById(d.MovieId)
                 // EndUtc er beregnet i modellen
             });
         }

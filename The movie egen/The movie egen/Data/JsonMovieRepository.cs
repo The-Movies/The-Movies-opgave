@@ -43,6 +43,11 @@ namespace The_movie_egen.Data
         private int _nextId;
 
         /// <summary>
+        /// Event that is raised when movies are added, updated, or deleted.
+        /// </summary>
+        public event EventHandler? MoviesChanged;
+
+        /// <summary>
         /// JSON-serialiseringsindstillinger for læsbar output.
         /// - Indenteret JSON for læsbarhed
         /// - Enum-værdier som tekst (fx "Action, Comedy" i stedet for tal)
@@ -97,6 +102,7 @@ namespace The_movie_egen.Data
             movie.Id = _nextId++;
             _items.Add(movie);
             Save();
+            MoviesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -113,6 +119,7 @@ namespace The_movie_egen.Data
             if (i < 0) throw new KeyNotFoundException($"Movie {movie.Id} not found");
             _items[i] = movie;
             Save();
+            MoviesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -129,6 +136,7 @@ namespace The_movie_egen.Data
             {
                 _items.RemoveAt(idx);
                 Save();
+                MoviesChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 

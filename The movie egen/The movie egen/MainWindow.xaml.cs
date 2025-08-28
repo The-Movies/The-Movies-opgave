@@ -20,7 +20,7 @@ namespace The_movie_egen
 
                 // Opret delte repository-instanser
                 IMovieRepository movieRepo = new JsonMovieRepository("movies.json");
-                IScreeningRepository screeningRepo = new The_movie_egen.Data.Json.JsonScreeningRepository();
+                IScreeningRepository screeningRepo = new The_movie_egen.Data.Json.JsonScreeningRepository("data/screenings", movieRepo);
                 var cinemaRepo = new JsonCinemaRepository("cinemas.json");
                 
                 // Sikr at der er seed data
